@@ -20,30 +20,32 @@ def load_config():
 class CatWatcher(FileSystemEventHandler):
     """ファイル/フォルダの変更を監視する猫"""
 
-    def __init__(self, patterns):
-        self.patterns = patterns
+    def __init__(self, file_patterns, folder_patterns):
+        self.file_patterns = file_patterns
+        self.folder_patterns = folder_patterns
 
-    def check_pattern_match(self, filename):
-        """ファイル名がパターンに一致するかチェック"""
+    def check_pattern_match(self, name, patterns, is_directory=False):
+        """名前がパターンに一致するかチェック"""
         matches = []
 
         # 完全一致
-        if filename in self.patterns.get("filenames", []):
-            matches.append(f"ファイル名一致: {filename}")
+        if name in patterns.get("names", []):
+            matches.append(f"名前一致: {name}")
 
-        # 拡張子
-        for ext in self.patterns.get("extensions", []):
-            if filename.endswith(ext):
-                matches.append(f"拡張子一致: {ext}")
+        # 拡張子（ファイルのみ）
+        if not is_directory:
+            for ext in patterns.get("extensions", []):
+                if name.endswith(ext):
+                    matches.append(f"拡張子一致: {ext}")
 
         # 接頭辞
-        for prefix in self.patterns.get("prefixes", []):
-            if filename.startswith(prefix):
+        for prefix in patterns.get("prefixes", []):
+            if name.startswith(prefix):
                 matches.append(f"接頭辞一致: {prefix}")
 
         # 接尾辞（拡張子を除いた部分）
-        name_without_ext = os.path.splitext(filename)[0]
-        for suffix in self.patterns.get("suffixes", []):
+        name_without_ext = os.path.splitext(name)[0] if not is_directory else name
+        for suffix in patterns.get("suffixes", []):
             if name_without_ext.endswith(suffix):
                 matches.append(f"接尾辞一致: {suffix}")
 
@@ -55,14 +57,17 @@ class CatWatcher(FileSystemEventHandler):
         print(f"🐱 にゃ！新しい{item_type}を見つけたよ！")
         print(f"   → {event.src_path}")
 
-        # ファイルの場合、パターンマッチをチェック
-        if not event.is_directory:
-            filename = os.path.basename(event.src_path)
-            matches = self.check_pattern_match(filename)
-            if matches:
-                print(f"   🎯 パターンにマッチ！")
-                for match in matches:
-                    print(f"      - {match}")
+        # パターンマッチをチェック
+        name = os.path.basename(event.src_path)
+        if event.is_directory:
+            matches = self.check_pattern_match(name, self.folder_patterns, is_directory=True)
+        else:
+            matches = self.check_pattern_match(name, self.file_patterns, is_directory=False)
+
+        if matches:
+            print(f"   🎯 パターンにマッチ！")
+            for match in matches:
+                print(f"      - {match}")
 
     def on_deleted(self, event):
         """ファイル/フォルダが削除されたとき"""
@@ -81,10 +86,11 @@ def main():
     # 設定を読み込む
     config = load_config()
     watch_path = config.get("watch_path", "./watch_target")
-    patterns = config.get("patterns", {})
+    file_patterns = config.get("file_patterns", {})
+    folder_patterns = config.get("folder_patterns", {})
 
     # 監視を開始
-    event_handler = CatWatcher(patterns)
+    event_handler = CatWatcher(file_patterns, folder_patterns)
     observer = Observer()
     observer.schedule(event_handler, watch_path, recursive=True)
     observer.start()
@@ -92,15 +98,22 @@ def main():
     print("=" * 50)
     print("🐱 Folder-Watching-Cat 起動！")
     print(f"   監視中: {watch_path}")
-    print("   検知パターン:")
-    if patterns.get("filenames"):
-        print(f"     ファイル名: {patterns['filenames']}")
-    if patterns.get("extensions"):
-        print(f"     拡張子: {patterns['extensions']}")
-    if patterns.get("prefixes"):
-        print(f"     接頭辞: {patterns['prefixes']}")
-    if patterns.get("suffixes"):
-        print(f"     接尾辞: {patterns['suffixes']}")
+    print("   📁 ファイル検知パターン:")
+    if file_patterns.get("names"):
+        print(f"     名前: {file_patterns['names']}")
+    if file_patterns.get("extensions"):
+        print(f"     拡張子: {file_patterns['extensions']}")
+    if file_patterns.get("prefixes"):
+        print(f"     接頭辞: {file_patterns['prefixes']}")
+    if file_patterns.get("suffixes"):
+        print(f"     接尾辞: {file_patterns['suffixes']}")
+    print("   📂 フォルダ検知パターン:")
+    if folder_patterns.get("names"):
+        print(f"     名前: {folder_patterns['names']}")
+    if folder_patterns.get("prefixes"):
+        print(f"     接頭辞: {folder_patterns['prefixes']}")
+    if folder_patterns.get("suffixes"):
+        print(f"     接尾辞: {folder_patterns['suffixes']}")
     print("   終了するには Ctrl+C を押してね")
     print("=" * 50)
 
