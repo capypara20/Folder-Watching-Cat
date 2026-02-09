@@ -50,6 +50,11 @@ class CatWatcher(FileSystemEventHandler):
             if name_without_ext.endswith(suffix):
                 matches.append(f"接尾辞一致ﾆｬｰ: {suffix}")
 
+        # 正規表現
+        for pattern in patterns.get("regex", []):
+            if re.match(pattern, name):
+                matches.append(f"正規表現一致ﾆｬｰ: {pattern}")
+
         return matches
 
     def on_created(self, event):
