@@ -1,9 +1,14 @@
 {
     "watch_path": "./watch_target",
-    "patterns": {
-        "filenames": ["report.txt", "important.csv"],
+    "file_patterns": {
+        "names": ["report.txt", "important.csv"],
         "extensions": [".log", ".csv"],
         "prefixes": ["backup_", "temp_"],
         "suffixes": ["_final", "_completed"]
+    },
+    "folder_patterns": {
+        "names": ["output", "backup"],
+        "prefixes": ["2024_", "2025_"],
+        "suffixes": ["_done", "_archived"]
     }
 }
