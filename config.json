@@ -4,7 +4,8 @@
         "names": ["report.txt", "important.csv"],
         "extensions": [".log", ".csv"],
         "prefixes": ["backup_", "temp_"],
-        "suffixes": ["_final", "_completed"]
+        "suffixes": ["_final", "_completed"],
+        "regex": ["^data_\\d{4}-\\d{2}-\\d{2}\\.csv$", "^log_.*\\.txt$"]
     },
     "folder_patterns": {
         "names": ["output", "backup"],

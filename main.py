@@ -5,6 +5,7 @@ Folder-Watching-Cat 🐱
 
 import json
 import os
+import re
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
