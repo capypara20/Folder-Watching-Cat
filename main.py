@@ -52,7 +52,7 @@ class CatWatcher(FileSystemEventHandler):
     def on_created(self, event):
         """新しいファイル/フォルダが作成されたとき"""
         item_type = "フォルダ" if event.is_directory else "ファイル"
-        print(f"🐱 にゃ！新しい{item_type}を見つけたよ！")
+        print(f"🐱 ﾆｬｰﾝ！新しい{item_type}を見つけたﾆｬｰ！")
         print(f"   → {event.src_path}")
 
         # ファイルの場合、パターンマッチをチェック
@@ -67,7 +67,7 @@ class CatWatcher(FileSystemEventHandler):
     def on_deleted(self, event):
         """ファイル/フォルダが削除されたとき"""
         item_type = "フォルダ" if event.is_directory else "ファイル"
-        print(f"🐱 あれ？{item_type}が消えたよ...")
+        print(f"🐱 ﾆｬ!!? {item_type}が消えたニャ!!")
         print(f"   → {event.src_path}")
 
     def on_modified(self, event):
@@ -90,7 +90,7 @@ def main():
     observer.start()
 
     print("=" * 50)
-    print("🐱 Folder-Watching-Cat 起動！")
+    print("🐱 にゃー Folder-Watching-Cat 起動しましたニャー！")
     print(f"   監視中: {watch_path}")
     print("   検知パターン:")
     if patterns.get("filenames"):
@@ -101,14 +101,14 @@ def main():
         print(f"     接頭辞: {patterns['prefixes']}")
     if patterns.get("suffixes"):
         print(f"     接尾辞: {patterns['suffixes']}")
-    print("   終了するには Ctrl+C を押してね")
+    print("   終了するには Ctrl+C を押してニャー!")
     print("=" * 50)
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\n🐱 またね！")
+        print("\n🐱 またニャ！")
         observer.stop()
 
     observer.join()
