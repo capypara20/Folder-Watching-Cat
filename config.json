@@ -1,0 +1,9 @@
+{
+    "watch_path": "./watch_target",
+    "patterns": {
+        "filenames": ["report.txt", "important.csv"],
+        "extensions": [".log", ".csv"],
+        "prefixes": ["backup_", "temp_"],
+        "suffixes": ["_final", "_completed"]
+    }
+}
