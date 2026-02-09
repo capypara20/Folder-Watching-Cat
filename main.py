@@ -29,23 +29,23 @@ class CatWatcher(FileSystemEventHandler):
 
         # 完全一致
         if filename in self.patterns.get("filenames", []):
-            matches.append(f"ファイル名一致: {filename}")
+            matches.append(f"ファイル名一致ﾆｬｰ: {filename}")
 
         # 拡張子
         for ext in self.patterns.get("extensions", []):
             if filename.endswith(ext):
-                matches.append(f"拡張子一致: {ext}")
+                matches.append(f"拡張子一致したﾆｬｰ: {ext}")
 
         # 接頭辞
         for prefix in self.patterns.get("prefixes", []):
             if filename.startswith(prefix):
-                matches.append(f"接頭辞一致: {prefix}")
+                matches.append(f"接頭辞一致ﾆｬｰ: {prefix}")
 
         # 接尾辞（拡張子を除いた部分）
         name_without_ext = os.path.splitext(filename)[0]
         for suffix in self.patterns.get("suffixes", []):
             if name_without_ext.endswith(suffix):
-                matches.append(f"接尾辞一致: {suffix}")
+                matches.append(f"接尾辞一致ﾆｬｰ: {suffix}")
 
         return matches
 
@@ -60,7 +60,7 @@ class CatWatcher(FileSystemEventHandler):
             filename = os.path.basename(event.src_path)
             matches = self.check_pattern_match(filename)
             if matches:
-                print(f"   🎯 パターンにマッチ！")
+                print(f"   🎯 ﾆｬﾆｬ！パターンにマッチしたﾆｬ！")
                 for match in matches:
                     print(f"      - {match}")
 
@@ -73,7 +73,7 @@ class CatWatcher(FileSystemEventHandler):
     def on_modified(self, event):
         """ファイル/フォルダが変更されたとき"""
         if not event.is_directory:
-            print(f"🐱 ファイルが変更されたよ！")
+            print(f"🐱 ファイル変更されたﾆｬｰﾝ!")
             print(f"   → {event.src_path}")
 
 
