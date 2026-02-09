@@ -5,6 +5,7 @@ Folder-Watching-Cat 🐱
 
 import json
 import os
+import re
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -46,6 +47,11 @@ class CatWatcher(FileSystemEventHandler):
         for suffix in self.patterns.get("suffixes", []):
             if name_without_ext.endswith(suffix):
                 matches.append(f"接尾辞一致: {suffix}")
+
+        # 正規表現
+        for pattern in self.patterns.get("regex", []):
+            if re.match(pattern, filename):
+                matches.append(f"正規表現一致: {pattern}")
 
         return matches
 
@@ -101,6 +107,8 @@ def main():
         print(f"     接頭辞: {patterns['prefixes']}")
     if patterns.get("suffixes"):
         print(f"     接尾辞: {patterns['suffixes']}")
+    if patterns.get("regex"):
+        print(f"     正規表現: {patterns['regex']}")
     print("   終了するには Ctrl+C を押してね")
     print("=" * 50)
 
